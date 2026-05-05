@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radar de Comunicaciones | UE Global Gateway Colombia</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --azul-ue: #003399;
+    --azul-medio: #1a4bb5;
+    --azul-claro: #4a7fd4;
+    --dorado: #FFCC00;
+    --dorado-suave: #ffe066;
+    --blanco: #ffffff;
+    --gris-fondo: #f0f3fa;
+    --gris-borde: #d0daf0;
+    --texto: #0d1e4a;
+    --texto-suave: #4a5a7a;
+    --verde: #2ecc71;
+    --rojo: #e74c3c;
+    --naranja: #f39c12;
+    --morado: #8e44ad;
+    --card-shadow: 0 4px 24px rgba(0,51,153,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--gris-fondo);
+    color: var(--texto);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, var(--azul-ue) 0%, var(--azul-medio) 60%, #2255c0 100%);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 80% 50%, rgba(255,204,0,0.18) 0%, transparent 60%);
+  }
+  .header-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 36px;
+    position: relative; z-index: 1;
+    flex-wrap: wrap; gap: 16px;
+  }
+  .header-brand { display: flex; align-items: center; gap: 16px; }
+  .eu-stars {
+    width: 52px; height: 52px;
+    background: var(--dorado);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    box-shadow: 0 0 0 4px rgba(255,204,0,0.25);
+  }
+  .header-title h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.35rem; font-weight: 800;
+    color: var(--blanco); letter-spacing: -0.5px;
+    line-height: 1.2;
+  }
+  .header-title p {
+    font-size: 0.78rem; color: rgba(255,255,255,0.7);
+    font-weight: 300; margin-top: 2px;
+  }
+  .header-badge {
+    background: var(--dorado);
+    color: var(--azul-ue);
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 0.7rem;
+    padding: 6px 14px; border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  /* FILTROS */
+  .filtros-bar {
+    background: var(--blanco);
+    border-bottom: 2px solid var(--gris-borde);
+    padding: 14px 36px;
+    display: flex; align-items: center; gap: 10px;
+    flex-wrap: wrap;
+  }
+  .filtros-bar span {
+    font-size: 0.75rem; font-weight: 500; color: var(--texto-suave);
+    margin-right: 4px;
+  }
+  .filtro-btn {
+    padding: 5px 14px; border-radius: 20px;
+    border: 1.5px solid var(--gris-borde);
+    background: transparent; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem; color: var(--texto-suave);
+    transition: all 0.2s;
+  }
+  .filtro-btn:hover, .filtro-btn.activo {
+    background: var(--azul-ue); color: var(--blanco);
+    border-color: var(--azul-ue);
+  }
+  .filtro-mes {
+    margin-left: auto;
+    display: flex; gap: 6px; align-items: center;
+  }
+  .filtro-mes select {
+    padding: 5px 10px; border-radius: 8px;
+    border: 1.5px solid var(--gris-borde);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem; color: var(--texto);
+    background: var(--blanco); cursor: pointer;
+    outline: none;
+  }
+
+  /* MAIN */
+  .main { padding: 28px 36px; max-width: 1500px; margin: 0 auto; }
+
+  /* STATS */
+  .stats-row {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 14px; margin-bottom: 28px;
+  }
+  .stat-card {
+    background: var(--blanco); border-radius: 14px;
+    padding: 16px 20px; box-shadow: var(--card-shadow);
+    border-left: 4px solid var(--azul-ue);
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .stat-card.dorado { border-color: var(--dorado); }
+  .stat-card.verde { border-color: var(--verde); }
+  .stat-card.morado { border-color: var(--morado); }
+  .stat-num {
+    font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800;
+    color: var(--azul-ue); line-height: 1;
+  }
+  .stat-card.dorado .stat-num { color: #b8940a; }
+  .stat-card.verde .stat-num { color: #27ae60; }
+  .stat-card.morado .stat-num { color: var(--morado); }
+  .stat-label { font-size: 0.75rem; color: var(--texto-suave); font-weight: 400; }
+
+  /* VISTA TOGGLE */
+  .vista-toggle {
+    display: flex; gap: 8px; margin-bottom: 20px; align-items: center;
+  }
+  .vista-btn {
+    padding: 7px 18px; border-radius: 8px;
+    border: 1.5px solid var(--gris-borde);
+    background: var(--blanco); cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem; color: var(--texto-suave);
+    transition: all 0.2s; font-weight: 500;
+  }
+  .vista-btn.activo {
+    background: var(--azul-ue); color: var(--blanco);
+    border-color: var(--azul-ue);
+  }
+
+  /* GRID DE EVENTOS */
+  .eventos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 18px;
+  }
+
+  .evento-card {
+    background: var(--blanco); border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1.5px solid transparent;
+    cursor: pointer;
+  }
+  .evento-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 40px rgba(0,51,153,0.15);
+    border-color: var(--azul-claro);
+  }
+  .evento-card-header {
+    padding: 16px 20px 12px;
+    display: flex; align-items: flex-start; gap: 14px;
+  }
+  .evento-fecha-box {
+    min-width: 52px; text-align: center;
+    background: var(--azul-ue); color: var(--blanco);
+    border-radius: 10px; padding: 6px 8px;
+    flex-shrink: 0;
+  }
+  .evento-fecha-box .dia {
+    font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800;
+    line-height: 1;
+  }
+  .evento-fecha-box .mes-abrev {
+    font-size: 0.65rem; font-weight: 500; letter-spacing: 1px;
+    text-transform: uppercase; opacity: 0.85;
+  }
+  .evento-meta { flex: 1; }
+  .evento-nombre {
+    font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700;
+    color: var(--texto); line-height: 1.3; margin-bottom: 4px;
+  }
+  .evento-tipo-badge {
+    display: inline-block; padding: 2px 10px; border-radius: 12px;
+    font-size: 0.65rem; font-weight: 600; letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .tipo-conmemoracion { background: #e8f0ff; color: var(--azul-ue); }
+  .tipo-sector { background: #fff3cd; color: #8a6000; }
+  .tipo-evento { background: #e8f8ef; color: #1a7a45; }
+  .tipo-regulatorio { background: #f0e8ff; color: #5a1a8a; }
+
+  .evento-card-body { padding: 0 20px 16px; }
+  .evento-relevancia {
+    font-size: 0.78rem; color: var(--texto-suave);
+    margin-bottom: 10px; line-height: 1.5;
+  }
+  .evento-tags {
+    display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px;
+  }
+  .tag {
+    padding: 2px 9px; border-radius: 8px;
+    background: var(--gris-fondo); font-size: 0.68rem;
+    color: var(--texto-suave); font-weight: 500;
+  }
+  .tag.colnodo { background: #ffefd5; color: #8a4500; }
+  .tag.ciberseg { background: #ffe8e8; color: #8a0000; }
+  .tag.conectiv { background: #e0f0ff; color: #003399; }
+  .tag.ia { background: #f0e0ff; color: #5a0099; }
+  .tag.copernicus { background: #e0fff0; color: #005a30; }
+  .tag.inclusion { background: #fff0e0; color: #8a4000; }
+
+  .redes-row {
+    display: flex; gap: 6px; align-items: center; margin-bottom: 12px;
+  }
+  .redes-row span { font-size: 0.7rem; color: var(--texto-suave); margin-right: 2px; }
+  .red-icon {
+    width: 26px; height: 26px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 700; color: white;
+    cursor: default;
+  }
+  .red-li { background: #0077b5; }
+  .red-tw { background: #1da1f2; }
+  .red-ig { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+  .red-fb { background: #1877f2; }
+
+  .btn-ia {
+    width: 100%; padding: 9px;
+    background: linear-gradient(135deg, var(--azul-ue), var(--azul-claro));
+    color: var(--blanco); border: none; border-radius: 10px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 500;
+    cursor: pointer; transition: opacity 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .btn-ia:hover { opacity: 0.88; }
+  .btn-ia:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* MODAL IA */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,20,80,0.55);
+    backdrop-filter: blur(6px);
+    z-index: 1000; display: none;
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.visible { display: flex; }
+  .modal {
+    background: var(--blanco); border-radius: 20px;
+    max-width: 700px; width: 100%;
+    max-height: 88vh; overflow-y: auto;
+    box-shadow: 0 24px 80px rgba(0,51,153,0.25);
+    position: relative;
+  }
+  .modal-header {
+    background: linear-gradient(135deg, var(--azul-ue), var(--azul-medio));
+    padding: 22px 28px;
+    border-radius: 20px 20px 0 0;
+    display: flex; align-items: flex-start; gap: 14px;
+  }
+  .modal-fecha-big {
+    background: var(--dorado); color: var(--azul-ue);
+    border-radius: 12px; padding: 8px 14px;
+    text-align: center; flex-shrink: 0;
+  }
+  .modal-fecha-big .dia { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; line-height: 1; }
+  .modal-fecha-big .mes { font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+  .modal-titulo { color: var(--blanco); }
+  .modal-titulo h2 { font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 700; line-height: 1.3; }
+  .modal-titulo p { font-size: 0.78rem; opacity: 0.75; margin-top: 4px; }
+  .modal-close {
+    position: absolute; top: 16px; right: 18px;
+    background: rgba(255,255,255,0.2); border: none;
+    color: white; border-radius: 50%;
+    width: 32px; height: 32px; cursor: pointer;
+    font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
+  }
+  .modal-body { padding: 24px 28px; }
+
+  .modal-section { margin-bottom: 22px; }
+  .modal-section-title {
+    font-family: 'Syne', sans-serif; font-size: 0.82rem; font-weight: 700;
+    color: var(--azul-ue); text-transform: uppercase; letter-spacing: 1px;
+    margin-bottom: 10px; padding-bottom: 6px;
+    border-bottom: 2px solid var(--dorado);
+    display: inline-block;
+  }
+  .modal-relevancia {
+    font-size: 0.85rem; color: var(--texto); line-height: 1.6;
+    background: var(--gris-fondo); padding: 12px 16px; border-radius: 10px;
+    border-left: 3px solid var(--azul-claro);
+  }
+
+  .piezas-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  }
+  .pieza-card {
+    background: var(--gris-fondo); border-radius: 10px; padding: 12px;
+    border: 1.5px solid var(--gris-borde);
+  }
+  .pieza-card h4 { font-size: 0.78rem; font-weight: 600; color: var(--texto); margin-bottom: 4px; }
+  .pieza-card p { font-size: 0.74rem; color: var(--texto-suave); line-height: 1.4; }
+
+  .redes-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px;
+  }
+  .red-card {
+    border-radius: 10px; padding: 12px;
+    color: white; font-size: 0.75rem;
+  }
+  .red-card.linkedin { background: #0077b5; }
+  .red-card.twitter { background: #1da1f2; }
+  .red-card.instagram { background: linear-gradient(135deg, #f09433, #dc2743, #bc1888); }
+  .red-card h4 { font-weight: 700; margin-bottom: 4px; font-size: 0.8rem; }
+  .red-card p { opacity: 0.9; line-height: 1.4; }
+
+  /* IA OUTPUT */
+  .ia-output-box {
+    background: linear-gradient(135deg, #f0f6ff, #f8f9ff);
+    border: 1.5px solid var(--azul-claro);
+    border-radius: 14px; padding: 18px;
+    margin-top: 14px; position: relative;
+    min-height: 80px;
+  }
+  .ia-badge {
+    position: absolute; top: -10px; left: 16px;
+    background: var(--azul-ue); color: white;
+    font-size: 0.65rem; font-weight: 700;
+    padding: 3px 10px; border-radius: 10px;
+    letter-spacing: 0.5px;
+  }
+  .ia-output-text {
+    font-size: 0.83rem; color: var(--texto);
+    line-height: 1.7; white-space: pre-wrap;
+    margin-top: 4px;
+  }
+  .ia-loading {
+    display: flex; align-items: center; gap: 8px;
+    color: var(--azul-ue); font-size: 0.82rem;
+  }
+  .dot-pulse {
+    display: flex; gap: 4px;
+  }
+  .dot-pulse span {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--azul-ue); animation: pulse 1.2s infinite;
+  }
+  .dot-pulse span:nth-child(2) { animation-delay: 0.2s; }
+  .dot-pulse span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes pulse { 0%,80%,100%{opacity:0.2;transform:scale(0.8)} 40%{opacity:1;transform:scale(1)} }
+
+  .btn-generar {
+    width: 100%; padding: 12px;
+    background: linear-gradient(135deg, var(--dorado), #f0b800);
+    color: var(--azul-ue); border: none; border-radius: 12px;
+    font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin-top: 8px;
+  }
+  .btn-generar:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(255,204,0,0.4); }
+  .btn-generar:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* VISTA CALENDARIO */
+  .vista-calendario { display: none; }
+  .cal-mes-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;
+  }
+  .cal-mes {
+    background: var(--blanco); border-radius: 14px; overflow: hidden;
+    box-shadow: var(--card-shadow);
+  }
+  .cal-mes-header {
+    background: var(--azul-ue); color: var(--blanco);
+    padding: 12px 16px;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem;
+  }
+  .cal-evento-item {
+    padding: 10px 16px; border-bottom: 1px solid var(--gris-borde);
+    cursor: pointer; transition: background 0.15s;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .cal-evento-item:hover { background: var(--gris-fondo); }
+  .cal-dia {
+    min-width: 32px; height: 32px; border-radius: 8px;
+    background: var(--gris-fondo); display: flex;
+    align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 0.9rem; color: var(--azul-ue); flex-shrink: 0;
+  }
+  .cal-info p { font-size: 0.78rem; font-weight: 500; color: var(--texto); line-height: 1.3; }
+  .cal-info span { font-size: 0.68rem; color: var(--texto-suave); }
+
+  /* EMPTY */
+  .empty-state {
+    text-align: center; padding: 60px 20px;
+    color: var(--texto-suave);
+  }
+  .empty-state h3 { font-family: 'Syne', sans-serif; margin-bottom: 8px; }
+
+  @media (max-width: 600px) {
+    .main { padding: 16px; }
+    .filtros-bar { padding: 12px 16px; }
+    .header-inner { padding: 16px; }
+    .eventos-grid { grid-template-columns: 1fr; }
+    .piezas-grid { grid-template-columns: 1fr; }
+    .modal-body { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="eu-stars">★</div>
+      <div class="header-title">
+        <h1>Radar de Comunicaciones Estratégicas</h1>
+        <p>Unión Europea · Global Gateway Colombia · Ecosistema Digital TIC</p>
+      </div>
+    </div>
+    <div class="header-badge">🗓 2025–2026</div>
+  </div>
+</div>
+
+<div class="filtros-bar">
+  <span>Filtrar por:</span>
+  <button class="filtro-btn activo" onclick="filtrar('todos', this)">Todos</button>
+  <button class="filtro-btn" onclick="filtrar('conmemoracion', this)">📅 Conmemoración</button>
+  <button class="filtro-btn" onclick="filtrar('sector', this)">📡 Sector TIC</button>
+  <button class="filtro-btn" onclick="filtrar('evento', this)">🎪 Evento</button>
+  <button class="filtro-btn" onclick="filtrar('regulatorio', this)">⚖️ Regulatorio</button>
+
+  <div class="filtro-mes">
+    <span>Mes:</span>
+    <select onchange="filtrarMes(this.value)">
+      <option value="todos">Todos</option>
+      <option value="1">Enero</option>
+      <option value="2">Febrero</option>
+      <option value="3">Marzo</option>
+      <option value="4">Abril</option>
+      <option value="5">Mayo</option>
+      <option value="6">Junio</option>
+      <option value="7">Julio</option>
+      <option value="8">Agosto</option>
+      <option value="9">Septiembre</option>
+      <option value="10">Octubre</option>
+      <option value="11">Noviembre</option>
+      <option value="12">Diciembre</option>
+    </select>
+  </div>
+</div>
+
+<div class="main">
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num" id="cnt-total">0</div>
+      <div class="stat-label">Fechas mapeadas</div>
+    </div>
+    <div class="stat-card dorado">
+      <div class="stat-num" id="cnt-conmem">0</div>
+      <div class="stat-label">Conmemoraciones</div>
+    </div>
+    <div class="stat-card verde">
+      <div class="stat-num" id="cnt-sector">0</div>
+      <div class="stat-label">Eventos TIC/Sector</div>
+    </div>
+    <div class="stat-card morado">
+      <div class="stat-num" id="cnt-proximos">0</div>
+      <div class="stat-label">Próximos 30 días</div>
+    </div>
+  </div>
+
+  <div class="vista-toggle">
+    <button class="vista-btn activo" onclick="cambiarVista('tarjetas', this)">🗂 Tarjetas</button>
+    <button class="vista-btn" onclick="cambiarVista('calendario', this)">📆 Por Mes</button>
+  </div>
+
+  <div id="vista-tarjetas" class="eventos-grid"></div>
+  <div id="vista-calendario" class="vista-calendario cal-mes-grid"></div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="cerrarModal(event)">
+  <div class="modal" id="modal-content">
+    <button class="modal-close" onclick="cerrarModal()">✕</button>
+    <div class="modal-header" id="modal-header">
+      <div class="modal-fecha-big" id="modal-fecha"></div>
+      <div class="modal-titulo" id="modal-titulo"></div>
+    </div>
+    <div class="modal-body">
+
+      <div class="modal-section">
+        <div class="modal-section-title">¿Por qué es relevante para la UE?</div>
+        <div class="modal-relevancia" id="modal-relevancia"></div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">Piezas de comunicación sugeridas</div>
+        <div class="piezas-grid" id="modal-piezas"></div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">Redes recomendadas</div>
+        <div class="redes-grid" id="modal-redes"></div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">✨ Generar contenido con IA</div>
+        <p style="font-size:0.8rem;color:var(--texto-suave);margin-bottom:10px;">
+          Haz clic para que la IA genere un borrador de publicación personalizado para cada red social, con enfoque en Global Gateway y los proyectos TIC de la UE en Colombia.
+        </p>
+        <button class="btn-generar" id="btn-generar" onclick="generarConIA()">
+          🤖 Generar publicaciones con IA
+        </button>
+        <div class="ia-output-box" id="ia-output" style="display:none;">
+          <div class="ia-badge">⚡ IA · Global Gateway Colombia</div>
+          <div class="ia-output-text" id="ia-text"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// =============================================
+// BASE DE DATOS DE EVENTOS
+// =============================================
+const EVENTOS = [
+  // CONMEMORACIONES
+  {
+    id: 1, dia: 17, mes: 5, tipo: "conmemoracion",
+    nombre: "Día Mundial de las Telecomunicaciones y la Sociedad de la Información",
+    descripcion: "ONU/UIT · 17 de mayo",
+    tags: ["conectividad", "inclusion", "colnodo"],
+    tagClases: ["conectiv", "inclusion", "colnodo"],
+    relevancia: "Fecha clave alineada con el proyecto Colnodo de redes comunitarias y el trabajo de la UE en conectividad rural. Permite mostrar los 10 pilotos de redes comunitarias como modelo de inclusión digital. Coincide con la narrativa 'Llegar donde nadie llega' del Pack Estratégico.",
+    piezas: [
+      { titulo: "Infografía de impacto", desc: "Datos clave: 800 personas capacitadas, 10 redes comunitarias, departamentos conectados." },
+      { titulo: "Video testimonial", desc: "Historia de una comunidad rural conectada gracias a los pilotos Colnodo-UE." },
+      { titulo: "Thread informativo", desc: "Hilo explicando qué son las redes comunitarias y por qué importan para Colombia." },
+      { titulo: "Post de cifras", desc: "€ invertidos por la UE en conectividad + brecha digital rural en Colombia." }
+    ],
+    redes: ["linkedin", "twitter", "instagram"],
+    actores: ["Colnodo", "MinTIC", "CRC", "D4D Hub"],
+    color: "#003399"
+  },
+  {
+    id: 2, dia: 8, mes: 3, tipo: "conmemoracion",
+    nombre: "Día Internacional de la Mujer",
+    descripcion: "ONU · 8 de marzo",
+    tags: ["inclusion", "talento digital", "liderazgo TIC"],
+    tagClases: ["inclusion", "ia", "conectiv"],
+    relevancia: "El proyecto Colnodo enfatiza la participación de mujeres (líderes TIC). El programa Women Leadership in TIC y la Triple Hélice ANDI/Indra/Danish forman parte del portfolio UE. Oportunidad para mostrar la dimensión de equidad de género en la cooperación digital.",
+    piezas: [
+      { titulo: "Galería de lideresas TIC", desc: "Perfil de mujeres líderes en los pilotos de redes comunitarias y programas de talento." },
+      { titulo: "Dato de impacto", desc: "% de mujeres capacitadas en el proyecto Colnodo y en la Academia de IA de Indra." },
+      { titulo: "Post narrativo", desc: "'Las mujeres conectan Colombia' — historia de lideresas digitales en zonas rurales." },
+      { titulo: "Reels/Stories", desc: "Micro-videos de 30 seg con testimonios de beneficiarias de programas UE." }
+    ],
+    redes: ["instagram", "linkedin", "twitter"],
+    actores: ["Colnodo", "ANDI/Indra", "Team Europe Women Leadership", "D4D Hub"],
+    color: "#8e44ad"
+  },
+  {
+    id: 3, dia: 5, mes: 6, tipo: "conmemoracion",
+    nombre: "Día Mundial del Medio Ambiente",
+    descripcion: "ONU · 5 de junio",
+    tags: ["copernicus", "datos satelitales", "clima"],
+    tagClases: ["copernicus", "conectiv"],
+    relevancia: "Copernicus —el programa espacial europeo— es una pieza clave del ecosistema digital UE. Permite mostrar cómo los datos satelitales europeos apoyan la gestión ambiental en Colombia (agro, riesgos, biodiversidad). Articula la oferta tecnológica de la UE más allá de la conectividad.",
+    piezas: [
+      { titulo: "Visualización de datos", desc: "Mapa de Colombia con imágenes Copernicus: deforestación, sequías, zonas de riesgo." },
+      { titulo: "Infografía educativa", desc: "'¿Cómo los satélites europeos cuidan el ambiente colombiano?' con datos IDEAM-UE." },
+      { titulo: "Post de datos", desc: "Número de imágenes satelitales procesadas, áreas monitoreadas, acuerdo IDEAM-UE 2017." },
+      { titulo: "Artículo técnico LinkedIn", desc: "La revolución de los datos satelitales para la gestión ambiental en ALC." }
+    ],
+    redes: ["linkedin", "twitter", "instagram"],
+    actores: ["Copernicus/IDEAM", "U. Manizales", "D4D Hub", "Expertise France"],
+    color: "#27ae60"
+  },
+  {
+    id: 4, dia: 22, mes: 4, tipo: "conmemoracion",
+    nombre: "Día de la Tierra",
+    descripcion: "ONU · 22 de abril",
+    tags: ["copernicus", "sostenibilidad", "IA"],
+    tagClases: ["copernicus", "ia"],
+    relevancia: "Oportunidad para posicionar a Copernicus y las tecnologías digitales europeas como herramientas de sostenibilidad. La IA aplicada al análisis de datos ambientales conecta con el EU AI Act como marco ético de gobernanza tecnológica.",
+    piezas: [
+      { titulo: "Carrusel de impacto", desc: "5 formas en que la tecnología europea ayuda a cuidar el planeta desde Colombia." },
+      { titulo: "Dato poderoso", desc: "Hectáreas monitoreadas con Copernicus en Colombia / regiones con alertas tempranas." },
+      { titulo: "Storytelling", desc: "'La Tierra vista desde Europa': cómo los satélites UE protegen ecosistemas colombianos." },
+      { titulo: "Mini-documental", desc: "Reel sobre el uso de datos satelitales para prevención de desastres en Colombia." }
+    ],
+    redes: ["instagram", "linkedin", "twitter"],
+    actores: ["Copernicus", "IDEAM", "MinCiencias", "BIOS"],
+    color: "#27ae60"
+  },
+  {
+    id: 5, dia: 12, mes: 10, tipo: "conmemoracion",
+    nombre: "Día Nacional de la Ciencia y la Tecnología (Colombia)",
+    descripcion: "MinCiencias · 12 de octubre",
+    tags: ["innovación", "talento digital", "IA"],
+    tagClases: ["ia", "inclusion"],
+    relevancia: "Fecha para mostrar el portafolio completo de la UE en ciencia y tecnología: Academia de IA Indra (Boyacá), Digital Accelerator Tecnalia, datos Copernicus. Coincide con la narrativa de 'Socio Indispensable' para la transformación digital de Colombia.",
+    piezas: [
+      { titulo: "Timeline de logros", desc: "Línea de tiempo de hitos UE en ciencia y tecnología en Colombia 2023–2026." },
+      { titulo: "Post del portfolio", desc: "Infografía mostrando el ecosistema completo: Colnodo + Copernicus + IA + BELLA II." },
+      { titulo: "Video institucional", desc: "El Embajador presenta la visión UE para la ciencia y tecnología en Colombia." },
+      { titulo: "Panel LinkedIn Live", desc: "Debate: '¿Cómo la cooperación UE-Colombia impulsa la innovación tecnológica?'" }
+    ],
+    redes: ["linkedin", "twitter", "instagram"],
+    actores: ["MinCiencias", "Tecnalia", "Indra", "D4D Hub", "RENATA"],
+    color: "#003399"
+  },
+  {
+    id: 6, dia: 30, mes: 11, tipo: "conmemoracion",
+    nombre: "Día Internacional de la Seguridad de la Información",
+    descripcion: "30 de noviembre",
+    tags: ["ciberseguridad", "LAC4", "regulación"],
+    tagClases: ["ciberseg", "ia"],
+    relevancia: "Permite posicionar el EU AI Act, el GDPR y el 5G Toolbox como estándares de referencia para Colombia. El proyecto LAC4 y la cooperación con ColCERT son casos tangibles de acción UE en ciberseguridad. Apoya la narrativa de 'Proveedores Confiables'.",
+    piezas: [
+      { titulo: "Infografía de estándares", desc: "GDPR + EU AI Act + 5G Toolbox: el marco europeo de seguridad digital explicado." },
+      { titulo: "Post de cifras LAC4", desc: "Número de funcionarios formados, países beneficiados, capacidades desarrolladas." },
+      { titulo: "Thread técnico", desc: "Por qué Colombia debería adoptar el 5G Toolbox europeo como estándar de seguridad." },
+      { titulo: "Webinar", desc: "La Agencia Nacional de Seguridad Digital: hoja de ruta UE para Colombia." }
+    ],
+    redes: ["linkedin", "twitter"],
+    actores: ["LAC4", "ColCERT", "CRC", "ANE", "Alianza Digital"],
+    color: "#e74c3c"
+  },
+
+  // SECTOR TIC
+  {
+    id: 7, dia: 24, mes: 3, tipo: "sector",
+    nombre: "Colombia Digital Summit (CRC)",
+    descripcion: "CRC · Cartagena · 24–26 marzo",
+    tags: ["regulación", "5G", "conectividad"],
+    tagClases: ["conectiv", "ciberseg"],
+    relevancia: "Espacio de visibilidad directa ante el sector TIC colombiano. Oportunidad para presentar propuesta CRC sobre mesas técnicas 900MHz, 5G Toolbox y estándares. La UE puede posicionarse como referente regulatorio en un momento de definición de política pública.",
+    piezas: [
+      { titulo: "Comunicado previo", desc: "La UE en el Colombia Digital Summit: estándares, inversión y conectividad rural." },
+      { titulo: "Post en vivo", desc: "Cobertura de la participación UE con citas y momentos clave del evento." },
+      { titulo: "Resumen ejecutivo", desc: "Principales acuerdos UE-CRC: avances en 900MHz, 5G Toolbox y redes comunitarias." },
+      { titulo: "Carrusel de propuestas", desc: "5 estándares europeos que Colombia debería adoptar para su regulación digital." }
+    ],
+    redes: ["linkedin", "twitter"],
+    actores: ["CRC", "ANE", "MinTIC", "Nokia"],
+    color: "#f39c12"
+  },
+  {
+    id: 8, dia: 14, mes: 4, tipo: "evento",
+    nombre: "Expo Smart Cities Bogotá",
+    descripcion: "14–16 de abril · Bogotá",
+    tags: ["smart cities", "conectividad", "innovación"],
+    tagClases: ["conectiv", "ia"],
+    relevancia: "Vitrina para mostrar la oferta UE en ciudades inteligentes y conectividad. La 'Facilidad para Ciudades' (CAF-BEI) y los pilotos de Boyacá/Antioquia son casos tangibles. Audiencia clave: alcaldes, secretarios TIC, sector privado.",
+    piezas: [
+      { titulo: "Stand conceptual UE", desc: "Propuesta de presencia UE con casos Boyacá, Antioquia y redes comunitarias." },
+      { titulo: "Infografía financiera", desc: "€4.6M de subvención + €200M crédito CAF-BEI para ciudades colombianas." },
+      { titulo: "Video pitch", desc: "'Smart City con sello europeo': tecnología, valores y financiación para municipios." },
+      { titulo: "Post de convocatoria", desc: "Invitación a alcaldes: así puede su ciudad acceder a fondos europeos de tecnología." }
+    ],
+    redes: ["linkedin", "twitter", "instagram"],
+    actores: ["CAF", "BEI", "Gobernación Boyacá", "Gobernación Antioquia", "CINTEL"],
+    color: "#27ae60"
+  },
+  {
+    id: 9, dia: 1, mes: 9, tipo: "evento",
+    nombre: "ANDICOM 2026 — UE como Región Invitada de Honor",
+    descripcion: "CINTEL · Septiembre 2026 · Cartagena",
+    tags: ["sector TIC", "inversión", "posicionamiento"],
+    tagClases: ["conectiv", "ia", "ciberseg"],
+    relevancia: "El evento más importante del sector TIC en Colombia. La UE como Región Invitada de Honor es una plataforma para presentar la oferta integral: €4.1B de inversión privada, Global Gateway, estándares y casos de éxito. Audiencia clave: nuevo gobierno, empresarios, reguladores.",
+    piezas: [
+      { titulo: "Pack de presentación", desc: "Deck completo del Embajador: inversión, proyectos, estándares y oferta tecnológica UE." },
+      { titulo: "Carrusel '5 razones UE'", desc: "'5 razones por las que la UE es el socio tecnológico estratégico de Colombia'." },
+      { titulo: "Video institucional", desc: "Pieza audiovisual de 2 min: la presencia digital europea en Colombia." },
+      { titulo: "Comunicado de prensa", desc: "UE presenta en ANDICOM su hoja de ruta digital para Colombia 2026–2030." }
+    ],
+    redes: ["linkedin", "twitter", "instagram", "facebook"],
+    actores: ["CINTEL", "ANDI", "MinTIC", "Nokia", "Ericsson", "Millicom", "Indra"],
+    color: "#003399"
+  },
+  {
+    id: 10, dia: 29, mes: 9, tipo: "evento",
+    nombre: "Smart City Expo Cali",
+    descripcion: "29 sep – 1 oct · Cali",
+    tags: ["smart cities", "conectividad", "redes"],
+    tagClases: ["conectiv", "inclusion"],
+    relevancia: "Espacio regional para mostrar la oferta de ciudades inteligentes y conectividad UE. Permite articular proyectos de Red Neutra (Boyacá, Antioquia) y la 'Facilidad para Ciudades' con tomadores de decisión regionales.",
+    piezas: [
+      { titulo: "Caso de éxito", desc: "Red Neutra Boyacá: cómo la UE financia infraestructura digital departamental." },
+      { titulo: "Infografía inversión", desc: "Mapa de Colombia con proyectos de conectividad apoyados por la UE." },
+      { titulo: "Panel de expertos", desc: "Debate: 'Redes neutras como modelo de conectividad sostenible para Colombia'." },
+      { titulo: "Post de convocatoria", desc: "La UE en Smart City Expo: tecnología, financiación y valores para ciudades colombianas." }
+    ],
+    redes: ["linkedin", "twitter", "instagram"],
+    actores: ["Gobernación Boyacá", "CINTEL", "CAF", "Gobernación Antioquia"],
+    color: "#f39c12"
+  },
+  {
+    id: 11, dia: 23, mes: 4, tipo: "conmemoracion",
+    nombre: "Día Mundial del Libro y Derechos de Autor",
+    descripcion: "UNESCO · 23 de abril",
+    tags: ["inclusion digital", "educación", "IA"],
+    tagClases: ["ia", "inclusion"],
+    relevancia: "Conecta con la dimensión de habilidades digitales y acceso a conocimiento del proyecto Colnodo (800 personas capacitadas) y la Academia de IA de Indra. La IA generativa y el acceso al conocimiento son puente natural entre esta fecha y la agenda digital UE.",
+    piezas: [
+      { titulo: "Post educativo", desc: "'Leer en la era digital': la apuesta UE por las habilidades digitales en Colombia." },
+      { titulo: "Dato de impacto", desc: "800 personas capacitadas en zonas rurales gracias a Colnodo-UE. El conocimiento conecta." },
+      { titulo: "Storytelling", desc: "Historia de una lideresa TIC que ahora enseña a su comunidad a usar Internet." },
+      { titulo: "Thread IA+Educación", desc: "Cómo el EU AI Act protege el acceso ético al conocimiento en la era de la IA." }
+    ],
+    redes: ["instagram", "linkedin", "twitter"],
+    actores: ["Colnodo", "UNESCO", "ANDI/Indra", "D4D Hub"],
+    color: "#8e44ad"
+  },
+  {
+    id: 12, dia: 25, mes: 5, tipo: "conmemoracion",
+    nombre: "Día Mundial de África / Europa-África Digital",
+    descripcion: "25 de mayo · Referencia UE Global Gateway Sur Global",
+    tags: ["global gateway", "cooperación", "inversión"],
+    tagClases: ["conectiv", "ia"],
+    relevancia: "El Global Gateway es la respuesta europea a la geopolítica digital global. Esta fecha permite posicionar la estrategia de inversión €300B a nivel mundial y el caso Colombia como modelo para América Latina. Narrativa: UE vs. competidores asiáticos — confianza y valores.",
+    piezas: [
+      { titulo: "Post geopolítico", desc: "'Por qué el origen del proveedor tecnológico importa': el enfoque de valores de la UE." },
+      { titulo: "Infografía Global Gateway", desc: "€300B globales · €4.1B en Colombia · El sello europeo de confianza digital." },
+      { titulo: "Thread de comparación", desc: "Global Gateway vs. otras iniciativas: transparencia, estándares y sostenibilidad." },
+      { titulo: "Video del Embajador", desc: "Mensaje sobre la apuesta UE por una digitalización con valores en el Sur Global." }
+    ],
+    redes: ["linkedin", "twitter"],
+    actores: ["Delegación UE", "D4D Hub", "Global Gateway"],
+    color: "#003399"
+  },
+  {
+    id: 13, dia: 28, mes: 5, tipo: "regulatorio",
+    nombre: "Aniversario GDPR (Reglamento Europeo de Datos)",
+    descripcion: "28 de mayo · Aniversario entrada en vigor 2018",
+    tags: ["regulación", "datos", "privacidad"],
+    tagClases: ["ciberseg", "ia"],
+    relevancia: "El GDPR es uno de los activos más potentes de la oferta regulatoria europea. Permite abrir conversación sobre convergencia regulatoria Colombia-UE en materia de datos. Apoya la narrativa de 'Proveedores Confiables' y posiciona el marco europeo frente al nuevo gobierno.",
+    piezas: [
+      { titulo: "Explicador GDPR-Colombia", desc: "'¿Qué puede aprender Colombia del GDPR europeo?' — comparativa normativa." },
+      { titulo: "Post de aniversario", desc: "X años del GDPR: por qué los datos personales son un derecho fundamental europeo." },
+      { titulo: "Thread técnico", desc: "5 principios del GDPR que Colombia debería incorporar en su política de datos." },
+      { titulo: "Artículo LinkedIn", desc: "Convergencia regulatoria UE-Colombia: el camino hacia un ecosistema digital de confianza." }
+    ],
+    redes: ["linkedin", "twitter"],
+    actores: ["CRC", "SIC", "DNP", "MinTIC"],
+    color: "#e74c3c"
+  },
+  {
+    id: 14, dia: 11, mes: 2, tipo: "conmemoracion",
+    nombre: "Día de la Mujer y la Niña en la Ciencia",
+    descripcion: "UNESCO · 11 de febrero",
+    tags: ["inclusion", "talento digital", "STEM"],
+    tagClases: ["inclusion", "ia"],
+    relevancia: "El programa Women Leadership in Public ICT y la formación de lideresas en los pilotos Colnodo son activos clave. La Academia de IA de Indra con enfoque en jóvenes refuerza la narrativa. Permite mostrar la dimensión de equidad del portfolio digital UE.",
+    piezas: [
+      { titulo: "Perfil de lideresa TIC", desc: "Historia de una mujer líder en redes comunitarias: de beneficiaria a gestora digital." },
+      { titulo: "Reto en RRSS", desc: "Convocatoria: comparte tu historia #MujeresQueConectan con apoyo UE." },
+      { titulo: "Dato poderoso", desc: "X% de las lideresas TIC capacitadas por Colnodo-UE son mujeres en zonas rurales." },
+      { titulo: "Video serie", desc: "Mini-serie: 'Mujeres que conectan Colombia' — 3 perfiles de lideresas digitales." }
+    ],
+    redes: ["instagram", "linkedin", "twitter"],
+    actores: ["Colnodo", "ANDI", "Indra", "Team Europe Women Leadership"],
+    color: "#8e44ad"
+  },
+  {
+    id: 15, dia: 1, mes: 6, tipo: "regulatorio",
+    nombre: "Foro Regional de Desarrollo UIT y CRC",
+    descripcion: "UIT + CRC · Junio 2026",
+    tags: ["regulación", "5G", "estándares", "conectividad"],
+    tagClases: ["conectiv", "ciberseg"],
+    relevancia: "Espacio técnico clave para posicionar los estándares europeos (5G Toolbox, estándares de espectro 900MHz) ante reguladores de la región. La UE puede presentarse como referente técnico-normativo y fortalecer la mesa UE-CRC.",
+    piezas: [
+      { titulo: "Position paper UE", desc: "Propuesta técnica UE para la regulación del espectro en ALC: 900MHz y 5G." },
+      { titulo: "Post de participación", desc: "La UE en el Foro UIT-CRC: estándares, conectividad rural y 5G con valores." },
+      { titulo: "Thread de propuestas", desc: "Las 3 propuestas regulatorias de la UE para mejorar la conectividad en Colombia." },
+      { titulo: "Comunicado técnico", desc: "Resultados del diálogo UE-CRC: avances en 900MHz para redes comunitarias." }
+    ],
+    redes: ["linkedin", "twitter"],
+    actores: ["CRC", "ANE", "UIT", "Nokia", "MinTIC"],
+    color: "#e74c3c"
+  }
+];
+
+// =============================================
+// ESTADO
+// =============================================
+let filtroActivo = "todos";
+let filtroMes = "todos";
+let eventoActual = null;
+
+// =============================================
+// RENDER
+// =============================================
+const MESES = ["","Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+const MESES_FULL = ["","Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+
+function tipoLabel(t) {
+  const m = { conmemoracion: "Conmemoración", sector: "Sector TIC", evento: "Evento", regulatorio: "Regulatorio" };
+  return m[t] || t;
+}
+function tipoBadgeClass(t) {
+  const m = { conmemoracion: "tipo-conmemoracion", sector: "tipo-sector", evento: "tipo-evento", regulatorio: "tipo-regulatorio" };
+  return m[t] || "";
+}
+
+function getEventosFiltrados() {
+  return EVENTOS.filter(e => {
+    const matchTipo = filtroActivo === "todos" || e.tipo === filtroActivo;
+    const matchMes = filtroMes === "todos" || e.mes === parseInt(filtroMes);
+    return matchTipo && matchMes;
+  }).sort((a, b) => a.mes !== b.mes ? a.mes - b.mes : a.dia - b.dia);
+}
+
+function renderStats() {
+  document.getElementById("cnt-total").textContent = EVENTOS.length;
+  document.getElementById("cnt-conmem").textContent = EVENTOS.filter(e => e.tipo === "conmemoracion").length;
+  document.getElementById("cnt-sector").textContent = EVENTOS.filter(e => e.tipo === "sector" || e.tipo === "evento").length;
+  
+  const hoy = new Date();
+  const en30 = new Date(hoy); en30.setDate(hoy.getDate() + 30);
+  const proximos = EVENTOS.filter(e => {
+    const fecha = new Date(2026, e.mes - 1, e.dia);
+    return fecha >= hoy && fecha <= en30;
+  });
+  document.getElementById("cnt-proximos").textContent = proximos.length;
+}
+
+function renderTarjetas() {
+  const lista = getEventosFiltrados();
+  const cont = document.getElementById("vista-tarjetas");
+  if (!lista.length) {
+    cont.innerHTML = '<div class="empty-state"><h3>No hay eventos para estos filtros</h3><p>Prueba cambiando los filtros</p></div>';
+    return;
+  }
+  cont.innerHTML = lista.map(e => `
+    <div class="evento-card" onclick="abrirModal(${e.id})">
+      <div class="evento-card-header">
+        <div class="evento-fecha-box" style="background:${e.color}">
+          <div class="dia">${e.dia}</div>
+          <div class="mes-abrev">${MESES[e.mes]}</div>
+        </div>
+        <div class="evento-meta">
+          <div class="evento-nombre">${e.nombre}</div>
+          <span class="evento-tipo-badge ${tipoBadgeClass(e.tipo)}">${tipoLabel(e.tipo)}</span>
+        </div>
+      </div>
+      <div class="evento-card-body">
+        <p class="evento-relevancia">${e.relevancia.substring(0, 120)}...</p>
+        <div class="evento-tags">
+          ${e.tags.map((t, i) => `<span class="tag ${e.tagClases[i] || ''}">${t}</span>`).join('')}
+        </div>
+        <div class="redes-row">
+          <span>Redes:</span>
+          ${e.redes.map(r => `<div class="red-icon red-${r === 'twitter' ? 'tw' : r === 'linkedin' ? 'li' : r === 'instagram' ? 'ig' : 'fb'}">${r === 'twitter' ? 'X' : r === 'linkedin' ? 'in' : r === 'instagram' ? '📷' : 'f'}</div>`).join('')}
+        </div>
+        <button class="btn-ia">✨ Ver detalle y generar con IA</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderCalendario() {
+  const lista = getEventosFiltrados();
+  const cont = document.getElementById("vista-calendario");
+  
+  const porMes = {};
+  lista.forEach(e => {
+    if (!porMes[e.mes]) porMes[e.mes] = [];
+    porMes[e.mes].push(e);
+  });
+  
+  if (!Object.keys(porMes).length) {
+    cont.innerHTML = '<div class="empty-state"><h3>No hay eventos para estos filtros</h3></div>';
+    return;
+  }
+  
+  cont.innerHTML = Object.keys(porMes).sort((a,b)=>a-b).map(mes => `
+    <div class="cal-mes">
+      <div class="cal-mes-header">${MESES_FULL[mes]}</div>
+      ${porMes[mes].map(e => `
+        <div class="cal-evento-item" onclick="abrirModal(${e.id})">
+          <div class="cal-dia" style="background:${e.color}20;color:${e.color}">${e.dia}</div>
+          <div class="cal-info">
+            <p>${e.nombre}</p>
+            <span><span class="evento-tipo-badge ${tipoBadgeClass(e.tipo)}" style="font-size:0.6rem">${tipoLabel(e.tipo)}</span></span>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+function render() {
+  renderTarjetas();
+  renderCalendario();
+  renderStats();
+}
+
+// =============================================
+// FILTROS
+// =============================================
+function filtrar(tipo, btn) {
+  filtroActivo = tipo;
+  document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('activo'));
+  btn.classList.add('activo');
+  render();
+}
+
+function filtrarMes(mes) {
+  filtroMes = mes;
+  render();
+}
+
+function cambiarVista(tipo, btn) {
+  document.querySelectorAll('.vista-btn').forEach(b => b.classList.remove('activo'));
+  btn.classList.add('activo');
+  document.getElementById('vista-tarjetas').style.display = tipo === 'tarjetas' ? 'grid' : 'none';
+  document.getElementById('vista-calendario').style.display = tipo === 'calendario' ? 'grid' : 'none';
+}
+
+// =============================================
+// MODAL
+// =============================================
+function abrirModal(id) {
+  eventoActual = EVENTOS.find(e => e.id === id);
+  if (!eventoActual) return;
+  const e = eventoActual;
+  
+  document.getElementById('modal-fecha').innerHTML = `
+    <div class="dia">${e.dia}</div>
+    <div class="mes">${MESES_FULL[e.mes]}</div>
+  `;
+  document.getElementById('modal-titulo').innerHTML = `
+    <h2>${e.nombre}</h2>
+    <p>${e.descripcion}</p>
+  `;
+  
+  document.getElementById('modal-relevancia').textContent = e.relevancia;
+  
+  document.getElementById('modal-piezas').innerHTML = e.piezas.map(p => `
+    <div class="pieza-card">
+      <h4>📌 ${p.titulo}</h4>
+      <p>${p.desc}</p>
+    </div>
+  `).join('');
+  
+  const redesHTML = {
+    linkedin: { cls: 'linkedin', ico: '💼', label: 'LinkedIn', nota: 'Artículo largo, datos, posición institucional. Audiencia: tomadores de decisión, sector privado.' },
+    twitter: { cls: 'twitter', ico: '𝕏', label: 'Twitter/X', nota: 'Posts cortos, threads, citas clave. Para debates de política pública.' },
+    instagram: { cls: 'instagram', ico: '📷', label: 'Instagram', nota: 'Visuales impactantes, stories, reels con historias humanas de impacto.' },
+    facebook: { cls: 'facebook', ico: 'f', label: 'Facebook', nota: 'Comunidades locales, alcance masivo, videos y eventos.' }
+  };
+  document.getElementById('modal-redes').innerHTML = e.redes.map(r => {
+    const rd = redesHTML[r];
+    return `<div class="red-card ${rd.cls}"><h4>${rd.ico} ${rd.label}</h4><p>${rd.nota}</p></div>`;
+  }).join('');
+  
+  document.getElementById('ia-output').style.display = 'none';
+  document.getElementById('btn-generar').disabled = false;
+  document.getElementById('btn-generar').textContent = '🤖 Generar publicaciones con IA';
+  
+  document.getElementById('modal').classList.add('visible');
+  document.body.style.overflow = 'hidden';
+}
+
+function cerrarModal(e) {
+  if (e && e.target !== document.getElementById('modal')) return;
+  document.getElementById('modal').classList.remove('visible');
+  document.body.style.overflow = '';
+}
+
+// =============================================
+// IA - GENERAR CONTENIDO
+// =============================================
+async function generarConIA() {
+  const e = eventoActual;
+  if (!e) return;
+  
+  const btn = document.getElementById('btn-generar');
+  const outputBox = document.getElementById('ia-output');
+  const outputText = document.getElementById('ia-text');
+  
+  btn.disabled = true;
+  btn.textContent = '⏳ Generando...';
+  outputBox.style.display = 'block';
+  outputText.innerHTML = `<div class="ia-loading"><div class="dot-pulse"><span></span><span></span><span></span></div><span>La IA está redactando publicaciones para el ${e.nombre}...</span></div>`;
+  
+  const prompt = `Eres el equipo de comunicaciones de la Delegación de la Unión Europea en Colombia. 
+  
+Estás preparando publicaciones en redes sociales para la siguiente fecha clave:
+
+📅 FECHA: ${e.dia} de ${MESES_FULL[e.mes]}
+📌 EVENTO/CONMEMORACIÓN: ${e.nombre}
+🏷 TIPO: ${tipoLabel(e.tipo)}
+
+RELEVANCIA PARA LA UE:
+${e.relevancia}
+
+PROYECTOS Y ACTORES RELACIONADOS:
+${e.actores.join(', ')}
+
+REDES OBJETIVO: ${e.redes.join(', ')}
+
+CONTEXTO ESTRATÉGICO:
+- La UE trabaja en Colombia en el marco del Global Gateway con proyectos de conectividad (Colnodo - 10 redes comunitarias, 800 personas capacitadas), ciberseguridad (LAC4, Alianza Digital), inteligencia artificial (EU AI Act, Academia IA Indra en Boyacá), datos satelitales (Copernicus-IDEAM) e infraestructura (BELLA II, Red Neutra Boyacá).
+- Inversión total empresas UE en el sector TIC de Colombia: €4.1 mil millones.
+- Financiamiento cooperación UE: €4.6M en grants + línea de crédito CAF-BEI de €200-300M.
+- Narrativa central: la UE como "Socio Indispensable" y "Proveedor Confiable" de tecnología con valores.
+
+TAREA:
+Genera publicaciones específicas y listas para publicar en ${e.redes.join(' y ')}. Cada publicación debe:
+1. Tener máximo el largo apropiado para cada red
+2. Usar datos y cifras concretas del contexto
+3. Conectar la fecha/evento con la acción real de la UE en Colombia
+4. Incluir hashtags relevantes
+5. Ser auténtica, con impacto, no genérica
+
+Formato de respuesta:
+Para cada red social, escribe:
+[NOMBRE DE LA RED]
+---
+[Texto de la publicación]
+[Hashtags]
+---
+
+Sé creativo, potente y estratégico. El Embajador podría usar estas publicaciones directamente.`;
+
+  try {
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
+    
+    const data = await response.json();
+    const text = data.content?.map(i => i.text || '').join('') || 'No se pudo generar contenido.';
+    
+    // Format output
+    const formatted = text
+      .replace(/\[([A-Z\/ ]+)\]/g, '<strong style="color:var(--azul-ue);font-family:Syne,sans-serif;display:block;margin-top:16px;margin-bottom:4px;font-size:0.85rem">📱 $1</strong>')
+      .replace(/---/g, '<hr style="border:none;border-top:1px solid var(--gris-borde);margin:8px 0">');
+    
+    outputText.innerHTML = formatted;
+    btn.textContent = '🔄 Regenerar con IA';
+    btn.disabled = false;
+    
+  } catch (err) {
+    outputText.innerHTML = `<span style="color:var(--rojo)">⚠️ Error al conectar con la IA. Intenta de nuevo.</span>`;
+    btn.textContent = '🤖 Reintentar';
+    btn.disabled = false;
+  }
+}
+
+// =============================================
+// INIT
+// =============================================
+document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarModal(); });
+render();
+</script>
+</body>
+</html>
